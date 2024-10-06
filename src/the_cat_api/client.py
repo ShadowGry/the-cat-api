@@ -29,8 +29,9 @@ async def check_status(response: ClientResponse):
 
 class Client:
 
-    def __init__(self, key: str):
+    def __init__(self, key: str, version: int):
         self.key = key
+        self.version = version
         self.host = 'https://api.thecatapi.com'
         self.session = ClientSession()
 
@@ -41,7 +42,8 @@ class Client:
         headers = {
             'x-api-key': self.key
         }
-        async with self.session.request(method, self.host + endpoint, params=parameters, headers=headers) as response:
+        version = f'/v{self.version}'
+        async with self.session.request(method, self.host + version + endpoint, params=parameters, headers=headers) as response:
             await check_status(response)
             content = await response.json()
         return content
