@@ -45,3 +45,14 @@ class TheCatAPI(Client):
                 'sub_id': sub_id
             }
         return await self.get(f'/images/{image_id}', parameters=parameters)
+
+    async def get_analysis(self, image_id, sub_id=None):
+        """
+        Get the raw analysis results for any uploaded image.
+        """
+        parameters = {}
+        if sub_id is not None:
+            parameters = {
+                'sub_id': sub_id
+            }
+        return await self.get(f'/images/{image_id}/analysis', parameters=parameters)
