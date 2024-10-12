@@ -34,3 +34,14 @@ class TheCatAPI(Client):
         }
         # TODO: Handle format=src response
         return await self.get('/images/search', parameters=parameters)
+
+    async def get_image(self, image_id, sub_id=None):
+        """
+        Return the image matching the ID.
+        """
+        parameters = {}
+        if sub_id is not None:
+            parameters = {
+                'sub_id': sub_id
+            }
+        return await self.get(f'/images/{image_id}', parameters=parameters)
