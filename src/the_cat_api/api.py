@@ -1,3 +1,4 @@
+from . import utils
 from .client import Client
 
 
@@ -56,3 +57,31 @@ class TheCatAPI(Client):
                 'sub_id': sub_id
             }
         return await self.get(f'/images/{image_id}/analysis', parameters=parameters)
+
+    async def uploaded_images(
+        self,
+        limit: int = None,
+        page: int = None,
+        order: str = None,
+        sub_id: str = None,
+        breed_ids: str = None,
+        category_ids: str = None,
+        format: str = None,
+        original_filename: str = None,
+        user_id: str = None
+    ):
+        """
+        Return your own uploaded images.
+        """
+        parameters = utils.remove_nones({
+            'limit': limit,
+            'page': page,
+            'order': order,
+            'sub_id': sub_id,
+            'breed_ids': breed_ids,
+            'category_ids': category_ids,
+            'format': format,
+            'original_filename': original_filename,
+            'user_id': user_id
+        })
+        return await self.get(f'/images', parameters=parameters)
