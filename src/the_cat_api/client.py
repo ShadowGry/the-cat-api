@@ -49,11 +49,17 @@ class Client:
         version = f'/v{self.version}'
         async with self.session.request(method, self.host + version + endpoint, params=parameters, headers=headers, data=data) as response:
             await check_status(response)
-            content = await response.json()
-        return content
+            try:
+                content = await response.json()
+                return content
+            except ContentTypeError:
+                pass
 
     async def get(self, endpoint, **kwargs):
         return await self.request('GET', endpoint, **kwargs)
 
     async def post(self, endpoint, **kwargs):
         return await self.request('POST', endpoint, **kwargs)
+
+    async def delete(self, endpoint):
+        return await self.request('DELETE', endpoint)
