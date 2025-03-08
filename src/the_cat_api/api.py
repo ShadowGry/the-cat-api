@@ -2,10 +2,10 @@ from . import utils
 from .client import Client
 
 
-class TheCatAPI(Client):
+class TheCatAPI:
 
-    def __init__(self, key: str, version: int = 1):
-        super().__init__(key, version)
+    def __init__(self, key: str):
+        self.client = Client(key)
 
     async def search_images(
         self,
@@ -34,7 +34,7 @@ class TheCatAPI(Client):
             'include_categories': include_categories
         }
         # TODO: Handle format=src response
-        return await self.get('/images/search', parameters=parameters)
+        return await self.client.get('/images/search', parameters=parameters)
 
     async def get_image(self, image_id, sub_id=None):
         """
@@ -45,7 +45,7 @@ class TheCatAPI(Client):
             parameters = {
                 'sub_id': sub_id
             }
-        return await self.get(f'/images/{image_id}', parameters=parameters)
+        return await self.client.get(f'/images/{image_id}', parameters=parameters)
 
     async def get_analysis(self, image_id, sub_id=None):
         """
@@ -56,7 +56,7 @@ class TheCatAPI(Client):
             parameters = {
                 'sub_id': sub_id
             }
-        return await self.get(f'/images/{image_id}/analysis', parameters=parameters)
+        return await self.client.get(f'/images/{image_id}/analysis', parameters=parameters)
 
     async def uploaded_images(
         self,
@@ -84,7 +84,7 @@ class TheCatAPI(Client):
             'original_filename': original_filename,
             'user_id': user_id
         })
-        return await self.get(f'/images', parameters=parameters)
+        return await self.client.get(f'/images', parameters=parameters)
 
     async def upload_image(
         self,
@@ -100,7 +100,7 @@ class TheCatAPI(Client):
             'sub_id': sub_id,
             'breeds_id': breeds_id
         })
-        return await self.post('/images/upload', data=data)
+        return await self.client.post('/images/upload', data=data)
 
     async def remove_image(
         self,
@@ -109,7 +109,7 @@ class TheCatAPI(Client):
         """
         Delete an uploaded image.
         """
-        await self.delete(f'/images/{image_id}')
+        await self.client.delete(f'/images/{image_id}')
 
     async def uploaded_breeds(
         self,
@@ -125,11 +125,11 @@ class TheCatAPI(Client):
         body = {
             'breed_id': breed_id
         }
-        return await self.post(f'/images/{image_id}/breeds', json=body)
+        return await self.client.post(f'/images/{image_id}/breeds', json=body)
 
     async def delete_breed(
         self,
         image_id,
         breed_id: int
     ):
-        return await self.delete(f'/images/{image_id}/breeds/{breed_id}')
+        return await self.client.delete(f'/images/{image_id}/breeds/{breed_id}')
