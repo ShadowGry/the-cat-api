@@ -33,21 +33,37 @@ async def check_status(response: ClientResponse):
 
 class Client:
 
-    def __init__(self, key: str, version: int):
+    def __init__(
+        self,
+        key: str,
+        *,
+        host = 'https://api.thecatapi.com',
+        version = 1
+    ):
         self.key = key
+        self.host = host
         self.version = version
-        self.host = 'https://api.thecatapi.com'
         self.session = ClientSession()
 
     async def close(self):
         await self.session.close()
 
-    async def request(self, method, endpoint, parameters=None, data=None, json=None):
+    async def request(
+        self,
+        method,
+        url,
+        parameters = None,
+        data = None,
+        json = None
+    ) -> ClientResponse:
         headers = {
             'x-api-key': self.key
         }
-        version = f'/v{self.version}'
-        async with self.session.request(method, self.host + version + endpoint, params=parameters, headers=headers, data=data, json=json) as response:
+        url = f'{self.host}/v{self.version}/{url}'
+        async with self.session.request(
+            method, url, params=parameters, headers=headers, data=data,
+            json=json
+        ) as response:
             await check_status(response)
             try:
                 content = await response.json()
@@ -55,11 +71,11 @@ class Client:
             except ContentTypeError:
                 pass
 
-    async def get(self, endpoint, **kwargs):
-        return await self.request('GET', endpoint, **kwargs)
+    async def get(self, url, **kwargs):
+        return await self.request('GET', url, **kwargs)
 
-    async def post(self, endpoint, **kwargs):
-        return await self.request('POST', endpoint, **kwargs)
+    async def post(self, url, **kwargs):
+        return await self.request('POST', url, **kwargs)
 
-    async def delete(self, endpoint):
-        return await self.request('DELETE', endpoint)
+    async def delete(self, url):
+        return await self.request('DELETE', url)
