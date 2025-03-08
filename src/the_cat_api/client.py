@@ -42,12 +42,12 @@ class Client:
     async def close(self):
         await self.session.close()
 
-    async def request(self, method, endpoint, parameters=None, data=None):
+    async def request(self, method, endpoint, parameters=None, data=None, json=None):
         headers = {
             'x-api-key': self.key
         }
         version = f'/v{self.version}'
-        async with self.session.request(method, self.host + version + endpoint, params=parameters, headers=headers, data=data) as response:
+        async with self.session.request(method, self.host + version + endpoint, params=parameters, headers=headers, data=data, json=json) as response:
             await check_status(response)
             try:
                 content = await response.json()

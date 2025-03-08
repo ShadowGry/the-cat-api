@@ -110,3 +110,26 @@ class TheCatAPI(Client):
         Delete an uploaded image.
         """
         await self.delete(f'/images/{image_id}')
+
+    async def uploaded_breeds(
+        self,
+        image_id
+    ):
+        return await self.get(f'/images/{image_id}/breeds')
+
+    async def upload_breed(
+        self,
+        image_id,
+        breed_id: int
+    ):
+        body = {
+            'breed_id': breed_id
+        }
+        return await self.post(f'/images/{image_id}/breeds', json=body)
+
+    async def delete_breed(
+        self,
+        image_id,
+        breed_id: int
+    ):
+        return await self.delete(f'/images/{image_id}/breeds/{breed_id}')
