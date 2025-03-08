@@ -1,4 +1,5 @@
 from aiohttp import (
+    ContentTypeError,
     ClientResponse,
     ClientSession
 )
@@ -12,7 +13,10 @@ from .exceptions import (
 async def get_contents(response: ClientResponse):
     status_code = response.status
     reason = response.reason
-    body = await response.json()
+    try:
+        body = await response.json()
+    except ContentTypeError:
+        body = await response.text()
     return status_code, reason, body
 
 
@@ -38,15 +42,18 @@ class Client:
     async def close(self):
         await self.session.close()
 
-    async def request(self, method, endpoint, parameters=None):
+    async def request(self, method, endpoint, parameters=None, data=None):
         headers = {
             'x-api-key': self.key
         }
         version = f'/v{self.version}'
-        async with self.session.request(method, self.host + version + endpoint, params=parameters, headers=headers) as response:
+        async with self.session.request(method, self.host + version + endpoint, params=parameters, headers=headers, data=data) as response:
             await check_status(response)
             content = await response.json()
         return content
 
     async def get(self, endpoint, **kwargs):
         return await self.request('GET', endpoint, **kwargs)
+
+    async def post(self, endpoint, **kwargs):
+        return await self.request('POST', endpoint, **kwargs)

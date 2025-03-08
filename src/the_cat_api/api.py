@@ -85,3 +85,19 @@ class TheCatAPI(Client):
             'user_id': user_id
         })
         return await self.get(f'/images', parameters=parameters)
+
+    async def upload_image(
+        self,
+        file,
+        sub_id: str = None,
+        breeds_id: str = None
+    ):
+        """
+        Upload an image.
+        """
+        data = utils.remove_nones({
+            'file': open(file, 'rb'),
+            'sub_id': sub_id,
+            'breeds_id': breeds_id
+        })
+        return await self.post('/images/upload', data=data)
