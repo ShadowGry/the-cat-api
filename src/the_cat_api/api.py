@@ -9,15 +9,15 @@ class TheCatAPI:
 
     async def search_images(
         self,
-        size: str = 'med',
-        mime_types: str = 'jpg',
-        format: str = 'json',
-        has_breeds: bool = True,
-        order: str = 'RANDOM',
-        page: int = 0,
-        limit: int = 1,
-        include_breeds: int = 1,
-        include_categories: int = 1
+        size = None,
+        mime_types = None,
+        format = None,
+        has_breeds = None,
+        order = None,
+        page = None,
+        limit = None,
+        include_breeds = None,
+        include_categories = None
     ):
         """
         Search all approved images. 
@@ -60,15 +60,15 @@ class TheCatAPI:
 
     async def uploaded_images(
         self,
-        limit: int = None,
-        page: int = None,
-        order: str = None,
-        sub_id: str = None,
-        breed_ids: str = None,
-        category_ids: str = None,
-        format: str = None,
-        original_filename: str = None,
-        user_id: str = None
+        limit = None,
+        page = None,
+        order = None,
+        sub_id = None,
+        breed_ids = None,
+        category_ids = None,
+        format = None,
+        original_filename = None,
+        user_id = None
     ):
         """
         Return your own uploaded images.
@@ -89,8 +89,8 @@ class TheCatAPI:
     async def upload_image(
         self,
         file,
-        sub_id: str = None,
-        breeds_id: str = None
+        sub_id = None,
+        breeds_id = None
     ):
         """
         Upload an image.
@@ -120,7 +120,7 @@ class TheCatAPI:
     async def upload_breed(
         self,
         image_id,
-        breed_id: int
+        breed_id
     ):
         body = {
             'breed_id': breed_id
@@ -130,6 +130,6 @@ class TheCatAPI:
     async def delete_breed(
         self,
         image_id,
-        breed_id: int
+        breed_id
     ):
         return await self.client.delete(f'/images/{image_id}/breeds/{breed_id}')
