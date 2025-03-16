@@ -7,6 +7,9 @@ class TheCatAPI:
     def __init__(self, key: str):
         self.client = Client(key)
 
+    async def close(self):
+        await self.client.close()
+
     async def search_images(
         self,
         size = None,

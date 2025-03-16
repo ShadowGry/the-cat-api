@@ -43,10 +43,11 @@ class Client:
         self.key = key
         self.host = host
         self.version = version
-        self.session = ClientSession()
+        self.session: ClientSession | None = None
 
     async def close(self):
-        await self.session.close()
+        if self.session is not None:
+            await self.session.close()
 
     async def request(
         self,
@@ -56,10 +57,12 @@ class Client:
         data = None,
         json = None
     ) -> ClientResponse:
+        if self.session is None:
+            self.session = ClientSession()
         headers = {
             'x-api-key': self.key
         }
-        url = f'{self.host}/v{self.version}/{url}'
+        url = f'{self.host}/v{self.version}{url}'
         async with self.session.request(
             method, url, params=parameters, headers=headers, data=data,
             json=json
