@@ -22,7 +22,7 @@ class TheCatAPI:
         """
         Search all approved images. 
         """
-        parameters = {
+        parameters = utils.remove_nones({
             'size': size,
             'mime_types': mime_types,
             'format': format,
@@ -32,7 +32,7 @@ class TheCatAPI:
             'limit': limit,
             'include_breeds': include_breeds,
             'include_categories': include_categories
-        }
+        })
         # TODO: Handle format=src response
         return await self.client.get('/images/search', parameters=parameters)
 
