@@ -136,3 +136,32 @@ class TheCatAPI:
         breed_id
     ):
         return await self.client.delete(f'/images/{image_id}/breeds/{breed_id}')
+
+
+    # Favourites
+
+    async def get_favourites(
+        self,
+        favourite_id: int | None = None
+    ):
+        url = '/favourites'
+        if favourite_id is not None:
+            url += f'/{favourite_id}'
+        return await self.client.get(url)
+
+    async def add_favourite(
+        self,
+        image_id: str,
+        sub_id: str | None = None
+    ):
+        data = utils.remove_nones({
+            'image_id': image_id,
+            'sub_id': sub_id
+        })
+        return await self.client.post(f'/favourites', json=data)
+
+    async def remove_favourite(
+        self,
+        favourite_id: int
+    ):
+        return await self.client.delete(f'/favourites/{favourite_id}')
